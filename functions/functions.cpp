@@ -1,6 +1,5 @@
-#include "functions.hpp"
-#include <fstream>
 #include <iostream>
+#include "functions.hpp"
 
 namespace ts
 {
