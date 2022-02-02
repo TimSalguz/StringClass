@@ -20,7 +20,7 @@ int main()
 
 
 	ts::var Peremennaya2;
-
+	Peremennaya21.Add('1');
 	Peremennaya21.Add('0');
 	Peremennaya21.Add('4');
 	Peremennaya21.Add('0');
@@ -30,6 +30,11 @@ int main()
 	Peremennaya21.Add('7');
 	Peremennaya21.Add(','); 
 	Peremennaya21.Add('9');
+		Peremennaya2.Add('9');
+			Peremennaya2.Add('9');
+				Peremennaya2.Add('9');
+					Peremennaya2.Add('9');
+						Peremennaya2.Add('9');
 
 
 	std::cout << "IsNumber " << Peremennaya21.IsNumber() <<std::endl;
@@ -38,7 +43,9 @@ int main()
 
 	std::cout << "Size: " << Peremennaya21.Size() << std::endl;
 	
-
+	Peremennaya2.Add('1');
+	Peremennaya2.Add('0');
+	Peremennaya2.Add('0');
 	Peremennaya2.Add('0');
 	Peremennaya2.Add('5');
 	Peremennaya2.Add('0');
@@ -47,6 +54,8 @@ int main()
 	Peremennaya2.Add('0');
 	Peremennaya2.Add('0');
 	Peremennaya2.Add(','); 
+	Peremennaya2.Add('9');
+	Peremennaya2.Add('9');
 	Peremennaya2.Add('9');
 	//Peremennaya2.Add('1');
 	//Peremennaya2.Add('2');

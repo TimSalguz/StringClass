@@ -129,7 +129,66 @@ namespace ts
             //если точка и размер строки одинаковый
             if(IsNumber() && B.IsNumber())
             {
-                FormatNumberString(B);
+                //Приведение к нужному формату
+                //Удаление нулей в начале
+                DeleteFirstUselessZeroes();
+                B.DeleteFirstUselessZeroes();       
+                //Добавление нулей в начале
+                if(SearchPoint() > B.SearchPoint())
+                {
+                    int difference = B.SearchPoint() - SearchPoint();
+                    std::cout << "Difference " << difference << std::endl;
+                    ExpandStringBy(difference);
+                    std::cout << "BSize " << B.Size() << std::endl;
+                    std::cout << "ASize " << size << std::endl;
+                    for (int i = size-1; i <=difference; i--)
+                    {
+                        string[i] = string[i-difference];
+                    }
+                    for (int i = 0; i < difference; i++)
+                    {
+                        string[i] = 0;
+                    }
+                }
+                else if(SearchPoint() < B.SearchPoint())
+                {
+                    int difference = SearchPoint() - B.SearchPoint();
+                    std::cout << "Difference " << difference << std::endl;
+                    B.ExpandStringBy(difference);
+                    std::cout << "BSize " << B.Size() << std::endl;
+                    std::cout << "ASize " << size << std::endl;
+                    for (int i = size-1; i <=difference; i--)
+                    {
+                        B.string[i] = string[i-difference];
+                    }
+                    for (int i = 0; i < difference; i++)
+                    {
+                        B.string[i] = 0;
+                    }
+                }
+                //Удаление нулей в конце
+                int uselessZeroLastA = EndSearchZero();
+                int uselessZeroLastB = B.EndSearchZero();
+
+                ReduceStringBy(size-uselessZeroLastA-1);
+                B.ReduceStringBy(size-uselessZeroLastB-1);
+
+                //Добавление нулей в конце ПОКА НЕ РАБОТАЕТ
+                if(size < B.Size())
+                {
+                    int differenceZero = B.Size() - size;
+                    ExpandStringBy(differenceZero);
+                    for(int i = size-differenceZero; i < size; i++)
+                        string[i] = 0;
+                }
+                else if(size > B.Size())
+                {
+                    int differenceZero = size - B.Size();
+                    B.ExpandStringBy(differenceZero);
+                    for(int i = B.Size()-differenceZero; i < B.Size(); i++)
+                        B.string[i] = 0;
+                }
+
                 bool mind = 0;
                 for (int i = 1; i <= size; i++)
                 {
@@ -163,6 +222,18 @@ namespace ts
                     Replace(B.Get(i), size-B.Size()+i);
                 }
             }
+        }
+
+        int EndSearchZero()
+        {
+            int a = size;
+            char b = Get(a);
+            while (b == 48)
+            {
+                a -= 1;
+                b = Get(a);
+            }
+            return a;
         }
 
         int SearchZero()
@@ -280,5 +351,23 @@ namespace ts
             else
                 std::cout << "ERROR! Array size = 0! You can not do it!" << std::endl;
         }
+
+        void ReduceStringBy(int howMuchReduce)
+        {
+            if(size>0) {
+                char *tempString = new char[size - howMuchReduce];
+                for (int i = 0; i < size - howMuchReduce; ++i) {
+                    tempString[i] = string[i];
+                }
+                delete[] string;
+                string = tempString;
+                size -= howMuchReduce;
+            }
+            else
+                std::cout << "ERROR! Array size = 0! You can not do it!" << std::endl;
+        }
+
+
+
     };
 }
