@@ -106,11 +106,9 @@ namespace ts
             {
                 if(!IsDigit(i))
                 {
-                    std::cout << string[i] << "    ETO NE CIFRA" << std::endl;
                     if (string[i] == 44 || string[i] == 46)
                     {
                         points++;
-                        std::cout << "points:" << points;
                         if(points > 1)
                             return 0;
                     }
@@ -133,71 +131,7 @@ namespace ts
                 if(size != B.Size() || SearchPoint() != B.SearchPoint())
                 {
                     //Удаление нулей в начале
-                    DeleteFirstUselessZeroes();
-                    B.DeleteFirstUselessZeroes();       
-                    //Добавление нулей в начале
-                    if(SearchPoint() > B.SearchPoint())
-                    {
-                        int difference = B.SearchPoint() - SearchPoint();
-                        std::cout << "Difference " << difference << std::endl;
-                        ExpandStringBy(difference);
-                        std::cout << "BSize " << B.Size() << std::endl;
-                        std::cout << "ASize " << size << std::endl;
-                        for (int i = size-1; i <=difference; i--)
-                        {
-                            string[i] = string[i-difference];
-                        }
-                        for (int i = 0; i < difference; i++)
-                        {
-                            string[i] = 0;
-                        }
-                    }
-                    else if(SearchPoint() < B.SearchPoint())
-                    {
-                        int difference = SearchPoint() - B.SearchPoint();
-                        std::cout << "Difference " << difference << std::endl;
-                        B.ExpandStringBy(difference);
-                        std::cout << "BSize " << B.Size() << std::endl;
-                        std::cout << "ASize " << size << std::endl;
-                        for (int i = size-1; i <=difference; i--)
-                        {
-                            B.string[i] = string[i-difference];
-                        }
-                        for (int i = 0; i < difference; i++)
-                        {
-                            B.string[i] = 0;
-                        }
-                    }
-                    //Удаление нулей в конце
-                    int uselessZeroLastA = EndSearchZero();
-                    int uselessZeroLastB = B.EndSearchZero();
-                    std::cout <<"uselesszerolasta is " << uselessZeroLastA << std::endl;;
-                    ReduceStringBy(size-uselessZeroLastA);
-                    B.ReduceStringBy(B.Size()-uselessZeroLastB);
-                    //Удаляю запятую если она лишняя
-                    std::cout << "string[size-1] is " << string[size-1] << std::endl;
-                    if(string[size-1] == 44 || string[size-1] == 46)
-                        ReduceString();
-                    if(B.string[B.Size()-1] == 44 || B.string[B.Size()-1] == 46)
-                        B.ReduceString();
-                    
-                    //Добавление нулей в конце
-                    if(size < B.Size())
-                    {
-                        Add(44);
-                        int differenceZero = B.Size() - size;
-                        ExpandStringBy(differenceZero);
-                        for(int i = size-differenceZero-1; i < size; i++)
-                            string[i] = 48;
-                    }
-                    else if(size > B.Size())
-                    {
-                        B.Add(44);
-                        int differenceZero = size - B.Size();
-                        B.ExpandStringBy(differenceZero);
-                        for(int i = B.Size()-differenceZero-1; i < B.Size(); i++)
-                            B.string[i] = 48;
-                    }
+                    FormatNumberString(B);
                 }
                 bool mind = 0;
                 for (int i = 1; i <= size; i++)
@@ -215,8 +149,6 @@ namespace ts
                         }
                         Replace(a, size-i);
                     }
-                    else
-                    std::cout << "aaaaaaaaaaaaaaaa" << size << std::endl;
                 }
                 if (mind == 1)
                 {
@@ -240,17 +172,6 @@ namespace ts
                 if(string[i-1] == 44 || string[i-1] == 46)
                     return i;
             return size;
-
-            // int a = size;
-            // std::cout << "size " << size<<std::endl;
-            // char b;
-            // while (b != 48)
-            // {
-            //     a--;
-            //     b = string[a];
-            //     std::cout << "b = " << b;
-            // }
-            // return a;
         }
 
         int SearchZero()
@@ -297,36 +218,73 @@ namespace ts
             ReduceBeginBy(SearchZero()+1);
         }
 
-        void AddZeroes(int pointA, int pointB)
+        void AddZeroesBegin(var& B)
         {
-            int difference = pointB - pointA;
-            ExpandStringBy(difference);
-            for (int i = size-1; i <=difference; i--)
+            if(SearchPoint() > B.SearchPoint())
             {
-                string[i] = string[i-1];
+                int difference = B.SearchPoint() - SearchPoint();
+                ExpandStringBy(difference);
+                for (int i = size-1; i <=difference; i--)
+                {
+                    string[i] = string[i-difference];
+                }
+                for (int i = 0; i < difference; i++)
+                {
+                    string[i] = 0;
+                }
             }
-            for (int i = 0; i < difference; i++)
+            else if(SearchPoint() < B.SearchPoint())
             {
-                string[i] = 0;
+                int difference = SearchPoint() - B.SearchPoint();
+                B.ExpandStringBy(difference);
+                for (int i = size-1; i <=difference; i--)
+                {
+                    B.string[i] = string[i-difference];
+                }
+                for (int i = 0; i < difference; i++)
+                {
+                    B.string[i] = 0;
+                }
             }
         }
-
-        void FormatNumberString(var b)
+        void AddZeroesEnd(var& B)
         {
-            std::cout << "Hello, world" << std::endl;
-            int pointA = SearchPoint();
-            int pointB = b.SearchPoint();
-            if(pointA != pointB || size != b.Size())
+            if(size < B.Size())
             {
-                DeleteFirstUselessZeroes();
-                b.DeleteFirstUselessZeroes();
-                if(pointA < pointB)
-                {
-                    AddZeroes(pointA, pointB);
-                }
-                else
-                    b.AddZeroes(pointB, pointA);
+                Add(44);
+                int differenceZero = B.Size() - size;
+                ExpandStringBy(differenceZero);
+                for(int i = size-differenceZero-1; i < size; i++)
+                    string[i] = 48;
             }
+            else if(size > B.Size())
+            {
+                B.Add(44);
+                int differenceZero = size - B.Size();
+                B.ExpandStringBy(differenceZero);
+                for(int i = B.Size()-differenceZero-1; i < B.Size(); i++)
+                    B.string[i] = 48;
+            }
+        }
+        void FormatNumberString(var& B)
+        {
+            DeleteFirstUselessZeroes();
+            B.DeleteFirstUselessZeroes();       
+            //Добавление нулей в начале
+            AddZeroesBegin(B);
+            //Удаление нулей в конце
+            int uselessZeroLastA = EndSearchZero();
+            int uselessZeroLastB = B.EndSearchZero();
+            ReduceStringBy(size-uselessZeroLastA);
+            B.ReduceStringBy(B.Size()-uselessZeroLastB);
+            //Удаляю запятую если она лишняя
+            if(string[size-1] == 44 || string[size-1] == 46)
+                ReduceString();
+            if(B.string[B.Size()-1] == 44 || B.string[B.Size()-1] == 46)
+                B.ReduceString();
+            
+            //Добавление нулей в конце
+            AddZeroesEnd(B);
         }
 
     private:
