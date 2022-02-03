@@ -23,18 +23,16 @@ int main()
 	Peremennaya21.Add('1');
 	Peremennaya21.Add('0');
 	Peremennaya21.Add('4');
+	Peremennaya21.Add(',');
 	Peremennaya21.Add('0');
-	Peremennaya21.Add('5');
-	Peremennaya21.Add('4');
+	Peremennaya21.Add('0');
+	Peremennaya21.Add('0');
+	Peremennaya21.Add('0');
+	Peremennaya21.Add('2');
+	Peremennaya21.Add('0');
+	Peremennaya21.Add('0');
+	Peremennaya21.Add('0');
 	Peremennaya21.Add('1');
-	Peremennaya21.Add('7');
-	Peremennaya21.Add(','); 
-	Peremennaya21.Add('9');
-		Peremennaya2.Add('9');
-			Peremennaya2.Add('9');
-				Peremennaya2.Add('9');
-					Peremennaya2.Add('9');
-						Peremennaya2.Add('9');
 
 
 	std::cout << "IsNumber " << Peremennaya21.IsNumber() <<std::endl;
@@ -46,17 +44,16 @@ int main()
 	Peremennaya2.Add('1');
 	Peremennaya2.Add('0');
 	Peremennaya2.Add('0');
-	Peremennaya2.Add('0');
-	Peremennaya2.Add('5');
-	Peremennaya2.Add('0');
-	Peremennaya2.Add('5');
+	Peremennaya2.Add(',');
 	Peremennaya2.Add('0');
 	Peremennaya2.Add('0');
+	Peremennaya2.Add('1');
 	Peremennaya2.Add('0');
-	Peremennaya2.Add(','); 
+	Peremennaya2.Add('0');
+	Peremennaya2.Add('8');
+	Peremennaya2.Add('0');
 	Peremennaya2.Add('9');
-	Peremennaya2.Add('9');
-	Peremennaya2.Add('9');
+
 	//Peremennaya2.Add('1');
 	//Peremennaya2.Add('2');
 
@@ -74,7 +71,6 @@ int main()
 
 	for (int i = 0; i < Peremennaya21.Size(); i++)
 	{
-		std::cout << "vyvod" << std::endl;
 		fout << Peremennaya21.Get(i);
 	}
 

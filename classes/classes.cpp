@@ -129,66 +129,76 @@ namespace ts
             //если точка и размер строки одинаковый
             if(IsNumber() && B.IsNumber())
             {
-                //Приведение к нужному формату
-                //Удаление нулей в начале
-                DeleteFirstUselessZeroes();
-                B.DeleteFirstUselessZeroes();       
-                //Добавление нулей в начале
-                if(SearchPoint() > B.SearchPoint())
+                //Приведение к нужному формату, если формат не нужный
+                if(size != B.Size() || SearchPoint() != B.SearchPoint())
                 {
-                    int difference = B.SearchPoint() - SearchPoint();
-                    std::cout << "Difference " << difference << std::endl;
-                    ExpandStringBy(difference);
-                    std::cout << "BSize " << B.Size() << std::endl;
-                    std::cout << "ASize " << size << std::endl;
-                    for (int i = size-1; i <=difference; i--)
+                    //Удаление нулей в начале
+                    DeleteFirstUselessZeroes();
+                    B.DeleteFirstUselessZeroes();       
+                    //Добавление нулей в начале
+                    if(SearchPoint() > B.SearchPoint())
                     {
-                        string[i] = string[i-difference];
+                        int difference = B.SearchPoint() - SearchPoint();
+                        std::cout << "Difference " << difference << std::endl;
+                        ExpandStringBy(difference);
+                        std::cout << "BSize " << B.Size() << std::endl;
+                        std::cout << "ASize " << size << std::endl;
+                        for (int i = size-1; i <=difference; i--)
+                        {
+                            string[i] = string[i-difference];
+                        }
+                        for (int i = 0; i < difference; i++)
+                        {
+                            string[i] = 0;
+                        }
                     }
-                    for (int i = 0; i < difference; i++)
+                    else if(SearchPoint() < B.SearchPoint())
                     {
-                        string[i] = 0;
+                        int difference = SearchPoint() - B.SearchPoint();
+                        std::cout << "Difference " << difference << std::endl;
+                        B.ExpandStringBy(difference);
+                        std::cout << "BSize " << B.Size() << std::endl;
+                        std::cout << "ASize " << size << std::endl;
+                        for (int i = size-1; i <=difference; i--)
+                        {
+                            B.string[i] = string[i-difference];
+                        }
+                        for (int i = 0; i < difference; i++)
+                        {
+                            B.string[i] = 0;
+                        }
+                    }
+                    //Удаление нулей в конце
+                    int uselessZeroLastA = EndSearchZero();
+                    int uselessZeroLastB = B.EndSearchZero();
+                    std::cout <<"uselesszerolasta is " << uselessZeroLastA << std::endl;;
+                    ReduceStringBy(size-uselessZeroLastA);
+                    B.ReduceStringBy(B.Size()-uselessZeroLastB);
+                    //Удаляю запятую если она лишняя
+                    std::cout << "string[size-1] is " << string[size-1] << std::endl;
+                    if(string[size-1] == 44 || string[size-1] == 46)
+                        ReduceString();
+                    if(B.string[B.Size()-1] == 44 || B.string[B.Size()-1] == 46)
+                        B.ReduceString();
+                    
+                    //Добавление нулей в конце
+                    if(size < B.Size())
+                    {
+                        Add(44);
+                        int differenceZero = B.Size() - size;
+                        ExpandStringBy(differenceZero);
+                        for(int i = size-differenceZero-1; i < size; i++)
+                            string[i] = 48;
+                    }
+                    else if(size > B.Size())
+                    {
+                        B.Add(44);
+                        int differenceZero = size - B.Size();
+                        B.ExpandStringBy(differenceZero);
+                        for(int i = B.Size()-differenceZero-1; i < B.Size(); i++)
+                            B.string[i] = 48;
                     }
                 }
-                else if(SearchPoint() < B.SearchPoint())
-                {
-                    int difference = SearchPoint() - B.SearchPoint();
-                    std::cout << "Difference " << difference << std::endl;
-                    B.ExpandStringBy(difference);
-                    std::cout << "BSize " << B.Size() << std::endl;
-                    std::cout << "ASize " << size << std::endl;
-                    for (int i = size-1; i <=difference; i--)
-                    {
-                        B.string[i] = string[i-difference];
-                    }
-                    for (int i = 0; i < difference; i++)
-                    {
-                        B.string[i] = 0;
-                    }
-                }
-                //Удаление нулей в конце
-                int uselessZeroLastA = EndSearchZero();
-                int uselessZeroLastB = B.EndSearchZero();
-
-                ReduceStringBy(size-uselessZeroLastA-1);
-                B.ReduceStringBy(size-uselessZeroLastB-1);
-
-                //Добавление нулей в конце ПОКА НЕ РАБОТАЕТ
-                if(size < B.Size())
-                {
-                    int differenceZero = B.Size() - size;
-                    ExpandStringBy(differenceZero);
-                    for(int i = size-differenceZero; i < size; i++)
-                        string[i] = 0;
-                }
-                else if(size > B.Size())
-                {
-                    int differenceZero = size - B.Size();
-                    B.ExpandStringBy(differenceZero);
-                    for(int i = B.Size()-differenceZero; i < B.Size(); i++)
-                        B.string[i] = 0;
-                }
-
                 bool mind = 0;
                 for (int i = 1; i <= size; i++)
                 {
@@ -226,14 +236,21 @@ namespace ts
 
         int EndSearchZero()
         {
-            int a = size;
-            char b = Get(a);
-            while (b == 48)
-            {
-                a -= 1;
-                b = Get(a);
-            }
-            return a;
+            for (int i = size-1; string[i] == 48; i--)
+                if(string[i-1] == 44 || string[i-1] == 46)
+                    return i;
+            return size;
+
+            // int a = size;
+            // std::cout << "size " << size<<std::endl;
+            // char b;
+            // while (b != 48)
+            // {
+            //     a--;
+            //     b = string[a];
+            //     std::cout << "b = " << b;
+            // }
+            // return a;
         }
 
         int SearchZero()
@@ -242,11 +259,11 @@ namespace ts
             char b = Get(a);
             while (b == 48)
             {
-                a += 1;
+                a++;
                 b = Get(a);
             }
             if (b == 44 || b == 46)
-                a -= 1;
+                a--;
             return a-1;
         }
 
